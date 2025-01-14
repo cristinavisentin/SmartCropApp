@@ -1,0 +1,100 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+*.egg-info/
+.dist/
+build/
+dist/
+*.egg
+*.wheel
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints
+
+# PyInstaller
+# Usually contains platform-specific files
+*.manifest
+*.spec
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+
+# Environments
+*.env
+*.env.*
+*.venv
+.envrc
+.vscode/settings.json
+.vscode/tasks.json
+.vscode/launch.json
+.vscode/*.code-workspace
+.idea/
+*.sublime-workspace
+
+# MyPy type checking cache
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# VS Code specific
+.vscode/
+.history/
+
+# Pyre type checker
+.pyre/
+
+# SQLite database files
+*.sqlite3
+
+# Logs
+*.log
+*.pid
+*.seed
+*.lock
+
+# Temporary files
+*.temp
+*.tmp
+
+# MacOS specific
+.DS_Store
+*.icloud
+
+# Windows specific
+Thumbs.db
+desktop.ini
+
+# Linux specific
+*.swp
+*.swo
+
+# Security
+*.key
+*.pem
+
+# Ignore specific folders (customize as needed)
+local_config/
+temp_files/
+
+# Ignore generated files from third-party tools
+*.ipynb_convert/
+
