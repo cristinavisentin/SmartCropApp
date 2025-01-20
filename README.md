@@ -4,7 +4,7 @@
 # 🌾 SmartCrop: agricultural yield predictor
 This web application leverages Python and Streamlit to provide farmers and agricultural enthusiasts with insights into crop yield predictions. Built on a machine learning engine, the app combines data-driven predictions with user-friendly features to encourage sustainable farming practices.
 
-## 🌟 Features
+## Features
 
 1. **Crop Yield Prediction**: 
    - Get accurate predictions for your field's yield based on machine learning algorithms trained on agricultural datasets.
@@ -25,7 +25,7 @@ This web application leverages Python and Streamlit to provide farmers and agric
 6. **Field Size Input and storage**:
    - Provide and save the size of your field to improve prediction accuracy and recommendations.
 
-## 🛠️ Installation and Setup
+## Installation and Setup
 
 #### Prerequisites
 - Python 3.8+
@@ -37,7 +37,7 @@ This web application leverages Python and Streamlit to provide farmers and agric
     git clone https://github.com/cristinavisentin/CropML-data-driven-app.git
 2. Navigate to the project directory:
     ```bash
-    cd your-repo
+    cd CropML-data-driven-app
 3. Install dependencies:
     ```bash
     pip install -r requirements.txt
@@ -45,7 +45,7 @@ This web application leverages Python and Streamlit to provide farmers and agric
     ```bash
     streamlit run app.py
 
-## 🌎 Vision and Commitment
+## Vision and Commitment
 
 Our mission is to empower farmers with cutting-edge technology while promoting sustainable agricultural practices. We believe in minimizing the ecological impact of farming, which is why we:
 
@@ -53,7 +53,7 @@ Provide seed suggestions tailored to your needs.
 
 Actively discourage the use of pesticides, advocating for eco-friendly alternatives.
 
-## 🖥️ Technologies Used
+## Technologies Used
 
 Python: Core programming language.
 
