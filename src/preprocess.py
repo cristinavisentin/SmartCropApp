@@ -38,7 +38,7 @@ encoded_values = pd.DataFrame(encoder.transform(
 df = df.drop(['Area', 'Item'], axis=1).join(encoded_values)
 
 # Write the encoder to disk
-encoder_file = open('encoder.pkl', 'wb')
+encoder_file = open('artifacts/encoder.pkl', 'wb')
 pickle.dump(encoder, encoder_file)
 encoder_file.close()
 
@@ -48,6 +48,6 @@ scaler = StandardScaler()
 scaler.fit(df)
 
 # Write the scaler to disk
-scaler_file = open('scaler.pkl', 'wb')
+scaler_file = open('artifacts/scaler.pkl', 'wb')
 pickle.dump(scaler, scaler_file)
 scaler_file.close()
