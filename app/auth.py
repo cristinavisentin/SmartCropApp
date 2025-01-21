@@ -18,7 +18,7 @@ def sign_in_page():
 
             st.success(f"Welcome, {username}!")
             time.sleep(0.5)
-            st.session_state["page"] = "cultivation"
+            st.session_state["page"] = "crop_application"
             st.rerun()
         else:
             st.error("Invalid credentials. Retry")

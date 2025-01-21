@@ -72,14 +72,7 @@ def get_username_from_db(user_id):
         else:
             print("No user found for user_id:", user_id)
             return ""
-    except jwt.ExpiredSignatureError:
-        print("Token expired")
-        return ""
-    except jwt.InvalidTokenError:
-        print("Invalid token")
-        return ""
-    except Exception as e:
-        print("Unexpected error:", e)
+    except sqlite3.Error:
         return ""
 
 
