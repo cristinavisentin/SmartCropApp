@@ -1,17 +1,26 @@
 import streamlit as st
 import time
 import db_utils
+import uuid
+
+def get_session_id():
+    if "session_id" not in st.session_state:
+        st.session_state["session_id"] = str(uuid.uuid4())
+    return st.session_state["session_id"]
 
 def sign_in_page():
     st.title("Sign in")
+    session_id = get_session_id()
+    st.session_state["session_id_" + session_id] = session_id
+
     username = st.text_input("Username")
     password = st.text_input("Password", type="password")
     remember = st.checkbox("Do you want to stay logged in?")
     if st.button("Sign In"):
         if remember:
-            result = db_utils.check_user_credentials(username, password, True)
+            result = db_utils.check_user_credentials(username, password, session_id)
         else:
-            result = db_utils.check_user_credentials(username, password, False)
+            result = db_utils.check_user_credentials(username, password, 0)
         if result:
             st.session_state["authenticated"] = True
             st.session_state["username"] = username
@@ -42,3 +51,4 @@ def sign_up_page():
         st.session_state["page"] = "sign_in"
         time.sleep(0.5)
         st.rerun()
+

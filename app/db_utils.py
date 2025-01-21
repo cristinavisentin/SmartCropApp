@@ -1,5 +1,4 @@
 import sqlite3
-import jwt
 import hashlib
 import os
 from cookie_handler import save_persistent_session_auth_token
@@ -28,7 +27,7 @@ def create_user(username, password):
             print(row)
         conn.close()
 
-def check_user_credentials(username, password, stay_connected):
+def check_user_credentials(username, password, session_id):
     conn = create_connection("users.db")
     cursor = conn.cursor()
     cursor.execute("SELECT id_username, username, hashed_password, salt FROM users WHERE username=?", (username,))
@@ -40,23 +39,36 @@ def check_user_credentials(username, password, stay_connected):
         retrieved_salt = bytes.fromhex(salt)
         print("id_user: ", id_user, "user_name: ", user_name, ", hashed_password: ", hashed_password, ", retrieved_salt: ", retrieved_salt)
         if user_data[2] == hash_password(password, retrieved_salt):
-            if stay_connected:
-                save_persistent_session_auth_token(id_user)
+            if session_id != 0:
+                save_persistent_session_auth_token(id_user, session_id)
+                save_session_to_db(id_user, session_id)
             conn.close()
             return True
     return False
 
 
-def check_id_in_db(user_id):
+def save_session_to_db(user_id, session_id):
+    conn = create_connection("users.db")
+    cursor = conn.cursor()
+    cursor.execute("INSERT INTO users_sessions (user_id, session_id) VALUES (?, ?)",
+        (user_id, session_id)
+    )
+    print("SESSION ID per ", user_id, " SALVATO IN DB: ", session_id)
+    conn.commit()
+    conn.close()
+
+def check_id_in_db(user_id, session_id):
     try:
         with sqlite3.connect("users.db") as conn:
             cursor = conn.cursor()
-            cursor.execute("SELECT username FROM users WHERE id_username=?", (user_id,))
-            user = cursor.fetchone()
-            print("user found in check_id_in_db: ", user[0])
-            if user is not None:
-                return True
-    except sqlite3.Error:
+            cursor.execute(
+                "SELECT 1 FROM users_sessions WHERE user_id = ? AND session_id = ?", (user_id, session_id)
+            )
+            result = cursor.fetchone()
+            print("RESULT OF DATABASE QUERY: ", result)
+            return result is not None
+    except sqlite3.Error as e:
+        print("Database error: ", e)
         return False
 
 
