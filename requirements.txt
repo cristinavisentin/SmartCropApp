@@ -1,3 +1,6 @@
 streamlit==1.40.2
 streamlit-cookies-controller==0.0.4
-
+PyJWT==2.10.1
+geocoder==1.38.1
+geopy==2.4.1
+watchdog==6.0.0

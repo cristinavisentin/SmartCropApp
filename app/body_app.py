@@ -1,22 +1,30 @@
 import streamlit as st
+import geocoder
+from geopy.geocoders import Nominatim
+
+def get_city():
+    g = geocoder.ip("me")
+    if g.ok:
+        lat, lon = g.latlng
+        st.success(f"Your position is: Lat {lat}, Lon {lon}")
+        st.map(data={"lat": [lat], "lon": [lon]}, zoom=10)
+        geolocator = Nominatim(user_agent="my_geopy_app")
+        location = geolocator.reverse(f"{lat},{lon}")
+
+        print(location)
+        address = location.raw['address']
+        print(address)
+        country = address.get('country', '')
+        st.write("You are in the following Country: ", country)
+
 
 def cultivation_page():
     st.title("Cultivation page")
-
-
-    st.header("Inserisci le informazioni sul tuo campo")
-    field_size = st.number_input("Dimensione del campo (in ettari):", min_value=0.0, step=0.1)
-    soil_type = st.selectbox("Tipo di terreno:", ["Sabbioso", "Argilloso", "Calcareo", "Torba", "Limoso"])
-    ph_value = st.slider("pH del terreno:", 0.0, 14.0, 7.0)
-
-    if st.button("Consiglia coltura"):
-        if soil_type == "Argilloso" and 6.0 <= ph_value <= 7.5 and field_size > 1.0:
-            recommendation = "Grano"
-        elif soil_type == "Sabbioso" and ph_value > 7.5:
-            recommendation = "Orzo"
-        else:
-            recommendation = "Mais"
-
-        st.success(f"La pianta consigliata per il tuo campo è: **{recommendation}**")
-
-    st.caption("Sviluppato per aiutare i contadini a migliorare la produttività!")
+    st.header("Choose an option")
+    options = ["Option 1", "Option 2", "Option 3"]
+    choice = st.selectbox("Choose an option:", options)
+    if st.button("Go"):
+        st.write(f"You chose: {choice}")
+        st.write(f"Getting position...")
+        get_city()
+    st.caption("Developed to help farmers improve productivity!")
