@@ -4,21 +4,30 @@ st.set_page_config(
     page_icon="🌱",
 )
 
-from auth import sign_in_page, sign_up_page, is_logged_in
+from auth import sign_in_page, sign_up_page
 from body_app import cultivation_page
-from cookie_handler import get_cookies, show_cookies, logout
-from db_utils import validate_token, user_name
+from cookie_handler import validate_token, logout, get_cookie, get_persistent_session_auth_token, get_username
 from menu_pages.info import info_page
 from menu_pages.user_data import user_data_page
 
+is_persistent_session = False
 
-is_auth = validate_token(get_cookies())
-print("Welcome back ", user_name)
+if "authenticated" not in st.session_state:
+    st.session_state["authenticated"] = False
+    st.session_state["username"] = None
 
-if is_auth or is_logged_in:
-    dynamic_title = f"Welcome back, {user_name}!"
+if not st.session_state["authenticated"]:
+    is_persistent_session = validate_token(get_persistent_session_auth_token())
+    if is_persistent_session:
+        st.session_state["username"] = get_username(get_cookie())
+
+is_auth = is_persistent_session or st.session_state["authenticated"]
+
+if is_auth:
+    dynamic_title = f"Welcome back {st.session_state["username"]}!"
     st.sidebar.title(dynamic_title)
-    print("2 Welcome back ", user_name)
+    st.sidebar.title("Welcome")
+    print("2 Welcome back ", st.session_state["username"])
     if st.sidebar.button("Process data") and st.session_state["page"] != "cultivation":
         st.session_state["page"] = "cultivation"
         st.rerun()
@@ -31,7 +40,7 @@ else:
 if st.sidebar.button("What is this app?") and st.session_state["page"] != "info":
     st.session_state["page"] = "info"
     info_page()
-if is_auth or is_logged_in:
+if is_auth:
     if st.sidebar.button("My data") and st.session_state["page"] != "data":
         st.session_state["page"] = "data"
         st.rerun()

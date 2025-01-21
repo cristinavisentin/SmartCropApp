@@ -1,13 +1,10 @@
 import sqlite3
 import jwt
-import datetime
 import hashlib
 import os
-
+from cookie_handler import save_persistent_session_auth_token
 SECRET_KEY = "123"
-user_name = "nullo"
 
-print("username in db_utils: ", user_name)
 def hash_password(password, salt):
     hashed_password = hashlib.sha256(salt + password.encode()).hexdigest()
     return hashed_password
@@ -31,50 +28,58 @@ def create_user(username, password):
             print(row)
         conn.close()
 
-def check_user_credentials(username, password):
+def check_user_credentials(username, password, stay_connected):
     conn = create_connection("users.db")
     cursor = conn.cursor()
-    cursor.execute("SELECT hashed_password, salt FROM users WHERE username=?", (username,))
+    cursor.execute("SELECT id_username, username, hashed_password, salt FROM users WHERE username=?", (username,))
     user_data = cursor.fetchone()
+    print("user_data: ", user_data)
 
     if user_data:
-        hashed_password, salt = user_data
+        id_user, user_name, hashed_password, salt = user_data
         retrieved_salt = bytes.fromhex(salt)
-        if user_data[0] == hash_password(password, retrieved_salt):
+        print("id_user: ", id_user, "user_name: ", user_name, ", hashed_password: ", hashed_password, ", retrieved_salt: ", retrieved_salt)
+        if user_data[2] == hash_password(password, retrieved_salt):
+            if stay_connected:
+                save_persistent_session_auth_token(id_user)
             conn.close()
             return True
     return False
 
 
-def generate_token(username):
-    expiration_time = datetime.datetime.utcnow() + datetime.timedelta(days=1)
-    payload = {
-        "username": username,
-        "exp": expiration_time
-    }
-    token = jwt.encode(payload, SECRET_KEY, algorithm="HS256")
-    return token
-
-
-def validate_token(token):
+def check_id_in_db(user_id):
     try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
-        global user_name
-        user_name = payload["username"]
-        print("username in validate_token: ", user_name)
+        with sqlite3.connect("users.db") as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT username FROM users WHERE id_username=?", (user_id,))
+            user = cursor.fetchone()
+            print("user found in check_id_in_db: ", user[0])
+            if user is not None:
+                return True
+    except sqlite3.Error:
+        return False
+
+
+def get_username_from_db(user_id):
+    try:
         conn = create_connection("users.db")
         cursor = conn.cursor()
-        cursor.execute("SELECT username FROM users WHERE username=?", (user_name,))
+        cursor.execute("SELECT username FROM users WHERE id_username=?", (user_id,))
         user = cursor.fetchone()
         if user:
-            print(f"Token valid for the user: {user_name}")
-            return True
+            print("user found in get_username: ", user[0])
+            return user[0]
         else:
-            print("Username not found in database")
-            return False
+            print("No user found for user_id:", user_id)
+            return ""
     except jwt.ExpiredSignatureError:
-        print("The token is expired")
-        return False
+        print("Token expired")
+        return ""
     except jwt.InvalidTokenError:
-        print("Token not valid")
-        return False
+        print("Invalid token")
+        return ""
+    except Exception as e:
+        print("Unexpected error:", e)
+        return ""
+
+

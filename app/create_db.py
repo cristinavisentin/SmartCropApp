@@ -5,7 +5,7 @@ cursor = conn.cursor()
 
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS users (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id_username INTEGER PRIMARY KEY AUTOINCREMENT,
     username TEXT UNIQUE NOT NULL,
     hashed_password TEXT NOT NULL,
     salt TEXT NOT NULL
@@ -19,15 +19,16 @@ try:
 except sqlite3.IntegrityError:
     print("'admin' user already exist")
 
-cursor.execute("SELECT username, hashed_password, salt FROM users")
+# Includi id_username nella query
+cursor.execute("SELECT id_username, username, hashed_password, salt FROM users")
 users = cursor.fetchall()
 
 if users:
     print("\nUsers in database:")
     for user in users:
-        print(f"Username: {user[0]}, Password: {user[1]}, Salt: {user[2]}")
+        print(f"ID: {user[0]}, Username: {user[1]}, Hashed Password: {user[2]}, Salt: {user[3]}")
 else:
-    print("No results founded in database.")
+    print("No results found in database.")
 
 conn.close()
 print("\nDatabase connection closed")
