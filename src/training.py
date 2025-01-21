@@ -37,7 +37,7 @@ scaler_file.close()
 X = scaler.transform(X)
 y = df['hg/ha_yield']
 
-forest = RandomForestRegressor(n_estimators=50, n_jobs=-1, random_state=666)
+forest = RandomForestRegressor(n_estimators=500, n_jobs=-1, random_state=666)
 
 forest.fit(X, y)
 pickle.dump(forest, open('artifacts/model.pkl', 'wb'))
