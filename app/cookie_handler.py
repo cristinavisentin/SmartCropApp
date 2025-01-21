@@ -2,6 +2,7 @@ import streamlit as st
 from db_utils import generate_token
 from streamlit_cookies_controller import CookieController
 import time
+import auth
 
 controller = CookieController(key='AgricultureAuth')
 
@@ -27,4 +28,6 @@ def save_cookies(username):
 
 def logout():
     controller.set("AgricultureAuth_Token", "", max_age=0)
+    auth.is_logged_in = False
+    st.write("You are correctly logged out")
     st.session_state["page"] = "sign_in"

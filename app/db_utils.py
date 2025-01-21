@@ -5,7 +5,9 @@ import hashlib
 import os
 
 SECRET_KEY = "123"
+user_name = "nullo"
 
+print("username in db_utils: ", user_name)
 def hash_password(password, salt):
     hashed_password = hashlib.sha256(salt + password.encode()).hexdigest()
     return hashed_password
@@ -57,13 +59,15 @@ def generate_token(username):
 def validate_token(token):
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
-        username = payload["username"]
+        global user_name
+        user_name = payload["username"]
+        print("username in validate_token: ", user_name)
         conn = create_connection("users.db")
         cursor = conn.cursor()
-        cursor.execute("SELECT username FROM users WHERE username=?", (username,))
+        cursor.execute("SELECT username FROM users WHERE username=?", (user_name,))
         user = cursor.fetchone()
         if user:
-            print(f"Token valid for the user: {username}")
+            print(f"Token valid for the user: {user_name}")
             return True
         else:
             print("Username not found in database")
