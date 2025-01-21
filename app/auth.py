@@ -2,7 +2,7 @@ import streamlit as st
 import time
 import db_utils
 import uuid
-
+from cookie_handler import save_persistent_session_auth_token
 def get_session_id():
     if "session_id" not in st.session_state:
         st.session_state["session_id"] = str(uuid.uuid4())
@@ -17,11 +17,10 @@ def sign_in_page():
     password = st.text_input("Password", type="password")
     remember = st.checkbox("Do you want to stay logged in?")
     if st.button("Sign In"):
-        if remember:
-            result = db_utils.check_user_credentials(username, password, session_id)
-        else:
-            result = db_utils.check_user_credentials(username, password, 0)
+        result = db_utils.check_and_mem_user_credentials(username, password)
         if result:
+            if remember:
+                save_persistent_session_auth_token(username)
             st.session_state["authenticated"] = True
             st.session_state["username"] = username
 

@@ -18,73 +18,44 @@ def create_user(username, password):
     try:
         cursor.execute("INSERT INTO users (username, hashed_password, salt) VALUES (?, ?, ?)", (username, hash_password(password, salt), salt.hex()))
         conn.commit()
+        conn.close()
         return True
     except sqlite3.IntegrityError:
         return False
-    finally:
-        rows = cursor.fetchall()
-        for row in rows:
-            print(row)
-        conn.close()
 
-def check_user_credentials(username, password, session_id):
+def check_and_mem_user_credentials(username, password):
     conn = create_connection("users.db")
     cursor = conn.cursor()
-    cursor.execute("SELECT id_username, username, hashed_password, salt FROM users WHERE username=?", (username,))
+    cursor.execute("SELECT username, hashed_password, salt FROM users WHERE username=?", (username,))
     user_data = cursor.fetchone()
-    print("user_data: ", user_data)
+    conn.close()
 
     if user_data:
-        id_user, user_name, hashed_password, salt = user_data
+        user_name, hashed_password, salt = user_data
         retrieved_salt = bytes.fromhex(salt)
-        print("id_user: ", id_user, "user_name: ", user_name, ", hashed_password: ", hashed_password, ", retrieved_salt: ", retrieved_salt)
-        if user_data[2] == hash_password(password, retrieved_salt):
-            if session_id != 0:
-                save_persistent_session_auth_token(id_user, session_id)
-                save_session_to_db(id_user, session_id)
-            conn.close()
+        if user_data[1] == hash_password(password, retrieved_salt):
             return True
     return False
 
 
-def save_session_to_db(user_id, session_id):
+def check_username_in_db(username):
     conn = create_connection("users.db")
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO users_sessions (user_id, session_id) VALUES (?, ?)",
-        (user_id, session_id)
-    )
-    print("SESSION ID per ", user_id, " SALVATO IN DB: ", session_id)
-    conn.commit()
-    conn.close()
+    # Stampa i dati della tabella
+    cursor.execute("SELECT * FROM users")  # Seleziona tutti i record
+    rows = cursor.fetchall()  # Ottieni tutte le righe
+    print("Contenuto della tabella 'users' in check_username_in_db:")
+    for row in rows:
+        print(row)
+    print("\n")
 
-def check_id_in_db(user_id, session_id):
     try:
-        with sqlite3.connect("users.db") as conn:
-            cursor = conn.cursor()
-            cursor.execute(
-                "SELECT 1 FROM users_sessions WHERE user_id = ? AND session_id = ?", (user_id, session_id)
-            )
-            result = cursor.fetchone()
-            print("RESULT OF DATABASE QUERY: ", result)
-            return result is not None
+        cursor.execute("SELECT 1 FROM users WHERE username = ?", (username,))
+        result = cursor.fetchone()
+
+        return result is not None
     except sqlite3.Error as e:
         print("Database error: ", e)
         return False
-
-
-def get_username_from_db(user_id):
-    try:
-        conn = create_connection("users.db")
-        cursor = conn.cursor()
-        cursor.execute("SELECT username FROM users WHERE id_username=?", (user_id,))
-        user = cursor.fetchone()
-        if user:
-            print("user found in get_username: ", user[0])
-            return user[0]
-        else:
-            print("No user found for user_id:", user_id)
-            return ""
-    except sqlite3.Error:
-        return ""
 
 
