@@ -15,7 +15,10 @@ def find_outliers(X):
 
 
 # Read dataset from file
-df = pd.read_csv('data/raw/yield_df.csv')
+df = pd.read_csv('data/raw/yield_df.csv', index_col=0)
+
+# Remove unneded variables
+df.drop(['pesticides_tonnes'], axis=1, inplace=True)
 
 # Remove duplicated rows
 df.drop_duplicates(inplace=True)
@@ -24,26 +27,24 @@ df.drop_duplicates(inplace=True)
 df = df[np.all(find_outliers(
     df[['hg/ha_yield', 'avg_temp', 'average_rain_fall_mm_per_year']]), axis=1)]
 
-# Remove unneded variables
-df.drop(['Unnamed: 0', 'pesticides_tonnes'], axis=1, inplace=True)
-
 # Save cleaned dataset to file
-df.to_csv('data/processed/yield.csv')
+df.to_csv('data/processed/yield.csv', index=False)
 
-# Encode categorical features
-encoder = OneHotEncoder(sparse_output=False, dtype=int).fit(
+# Fit the encoder
+encoder = OneHotEncoder(sparse_output=False).fit(
     df[['Item', 'Area']])
-encoded_values = pd.DataFrame(encoder.transform(
-    df[['Item', 'Area']]), columns=encoder.get_feature_names_out())
-df = df.drop(['Area', 'Item'], axis=1).join(encoded_values)
 
 # Write the encoder to disk
 encoder_file = open('artifacts/encoder.pkl', 'wb')
 pickle.dump(encoder, encoder_file)
 encoder_file.close()
 
+# Encode categorical
+encoded_values = pd.DataFrame(encoder.transform(
+    df[['Item', 'Area']]), columns=encoder.get_feature_names_out())
+df = df.drop(['Area', 'Item', 'hg/ha_yield'], axis=1).join(encoded_values)
 
-# Scaling numerical features
+# Fitting the scaler
 scaler = StandardScaler()
 scaler.fit(df)
 
