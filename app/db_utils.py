@@ -1,8 +1,6 @@
 import sqlite3
 import hashlib
 import os
-from cookie_handler import save_persistent_session_auth_token
-SECRET_KEY = "123"
 
 def hash_password(password, salt):
     hashed_password = hashlib.sha256(salt + password.encode()).hexdigest()
