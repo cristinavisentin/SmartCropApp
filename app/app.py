@@ -6,12 +6,13 @@ st.set_page_config(
 )
 
 from auth import sign_in_page, sign_up_page
-from body_app import cultivation_page
+from body_app import single_prediction_page, multiple_prediction_page
 from cookie_handler import validate_token, logout, get_persistent_session_auth_token, get_username
 from menu_pages.home_page import homepage
 from menu_pages.user_data import user_data_page
 from menu_pages.privacy_policy import privacy_policy_page
 from menu_pages.vision import vision_page
+from prediction_result import prediction_result_page
 
 if "authenticated" not in st.session_state:
     st.session_state["authenticated"] = False
@@ -30,7 +31,7 @@ def render_sidebar():
     if st.session_state["authenticated"]:
         st.sidebar.title(f"Welcome back {st.session_state['username']}!")
         if st.sidebar.button("Process data"):
-            st.session_state["page"] = "crop_application"
+            st.session_state["page"] = "crop_application_single_prediction"
         if st.sidebar.button("My data"):
             st.session_state["page"] = "data"
         if st.sidebar.button("What is this app?"):
@@ -67,8 +68,12 @@ def show_page():
         sign_in_page()
     elif page == "sign_up":
         sign_up_page()
-    elif page == "crop_application":
-        cultivation_page()
+    elif page == "crop_application_single_prediction":
+        single_prediction_page()
+    elif page == "crop_application_multiple_prediction":
+        multiple_prediction_page()
+    elif page == "prediction_result":
+        prediction_result_page()
     elif page == "data":
         user_data_page()
     elif page == "homepage":
