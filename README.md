@@ -43,7 +43,7 @@ This web application leverages Python and Streamlit to provide farmers and agric
     pip install -r requirements.txt
 4. Run the application:
     ```bash
-    streamlit run app.py
+    streamlit run app/app.py
 
 ## Vision and Commitment
 
