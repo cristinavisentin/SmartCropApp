@@ -10,6 +10,8 @@ from body_app import cultivation_page
 from cookie_handler import validate_token, logout, get_persistent_session_auth_token, get_username
 from menu_pages.info import info_page
 from menu_pages.user_data import user_data_page
+from menu_pages.privacy_policy import privacy_policy_page
+from menu_pages.vision import vision_page
 
 if "authenticated" not in st.session_state:
     st.session_state["authenticated"] = False
@@ -33,6 +35,10 @@ def render_sidebar():
             st.session_state["page"] = "data"
         if st.sidebar.button("What is this app?"):
             st.session_state["page"] = "info"
+        if st.sidebar.button("Privacy policy"):
+            st.session_state["page"] = "privacy_policy"
+        if st.sidebar.button("Our vision"):
+            st.session_state["page"] = "vision"
         if st.sidebar.button("Log Out"):
             logout()
             st.session_state["authenticated"] = False
@@ -47,7 +53,10 @@ def render_sidebar():
             st.session_state["page"] = "sign_up"
         if st.sidebar.button("What is this app?"):
             st.session_state["page"] = "info"
-
+        if st.sidebar.button("Privacy policy"):
+            st.session_state["page"] = "privacy_policy"
+        if st.sidebar.button("Our vision"):
+            st.session_state["page"] = "vision"
 
 render_sidebar()
 
@@ -64,6 +73,9 @@ def show_page():
         user_data_page()
     elif page == "info":
         info_page()
-
+    elif page == "privacy_policy":
+        privacy_policy_page()
+    elif page == "vision":
+        vision_page()
 
 show_page()
