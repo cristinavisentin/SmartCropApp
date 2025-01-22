@@ -24,14 +24,16 @@ The `StandardScaler` object is saved to the `scaler.pkl` file to be ready to use
 
 The `RandomForestRegressor` object is saved to the `model.pkl` file to be ready to use in the application:
 - parameters of the models are chosen across a grid of parameters using `GridSearchCV`; the best ones are
-  - dio
-  - la madonna
-  - e sua madre
+  - `n_estimators`: 50
+  - `min_samples_split`: 4
+  - `min_samples_leaf`: 2
+  - `max_features`: None
+  - `criterion`: poisson
 - predictions are performed with `model.predict(x)` and return a number representing the estimated **yield in hg/ha** for the given country and crop item.
 - the application will only need to multiply it to the number of hectares to obtain the estimated yield in hectograms (units can change).
 - metrics used to assess the model are **cross fold validation** using the standard metric of the regressor.
 - other parameters we looked into are the test error:
-  - **MAE**:
-  - **MAPE**:
-  - **MSE**:
-  - **R2**: 
+  - **MAE**: 3283
+  - **MAPE**: 0.088
+  - **MSE**: 7919
+  - **R2**: 0.98
