@@ -19,7 +19,7 @@ def sign_in_page():
     if st.button("Sign In"):
         result, error_message = db_utils.check_user_credentials(username, password)
         if error_message:
-            st.error(f"There is a problem with the database. We apologize for the inconvenience, please try again later")
+            st.error("There is a problem with the database. We apologize for the inconvenience, please try again later")
         else:
             if result:
                 if remember:
@@ -28,7 +28,7 @@ def sign_in_page():
                 st.session_state["username"] = username
                 st.success(f"Welcome, {username}!")
                 time.sleep(0.5)
-                st.session_state["page"] = "crop_application"
+                st.session_state["page"] = "homepage"
                 st.rerun()
             else:
                 st.error("Invalid credentials. Retry")
@@ -44,7 +44,7 @@ def sign_up_page():
     if st.button("Sign Up"):
         result, error_message = db_utils.create_user(username, password)
         if error_message:
-            st.error(f"There is a problem with the database. We apologize for the inconvenience, please try again later")
+            st.error("There is a problem with the database. We apologize for the inconvenience, please try again later")
         else:
             if result:
                 st.success("Successful registration! Back to login page")

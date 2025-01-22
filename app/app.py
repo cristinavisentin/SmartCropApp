@@ -8,7 +8,7 @@ st.set_page_config(
 from auth import sign_in_page, sign_up_page
 from body_app import cultivation_page
 from cookie_handler import validate_token, logout, get_persistent_session_auth_token, get_username
-from menu_pages.info import info_page
+from menu_pages.home_page import homepage
 from menu_pages.user_data import user_data_page
 from menu_pages.privacy_policy import privacy_policy_page
 from menu_pages.vision import vision_page
@@ -22,7 +22,7 @@ if "authenticated" not in st.session_state:
     if not st.session_state["authenticated"] and validate_token(get_persistent_session_auth_token()):
         st.session_state["authenticated"] = True
         st.session_state["username"] = get_username(get_persistent_session_auth_token())
-        st.session_state["page"] = "crop_application"
+        st.session_state["page"] = "homepage"
         print("SESSION STATE NEL SECONDO IF: ", st.session_state["authenticated"])
 
 
@@ -34,7 +34,7 @@ def render_sidebar():
         if st.sidebar.button("My data"):
             st.session_state["page"] = "data"
         if st.sidebar.button("What is this app?"):
-            st.session_state["page"] = "info"
+            st.session_state["page"] = "homepage"
         if st.sidebar.button("Privacy policy"):
             st.session_state["page"] = "privacy_policy"
         if st.sidebar.button("Our vision"):
@@ -52,7 +52,7 @@ def render_sidebar():
         if st.sidebar.button("Don't have an account?"):
             st.session_state["page"] = "sign_up"
         if st.sidebar.button("What is this app?"):
-            st.session_state["page"] = "info"
+            st.session_state["page"] = "homepage"
         if st.sidebar.button("Privacy policy"):
             st.session_state["page"] = "privacy_policy"
         if st.sidebar.button("Our vision"):
@@ -71,8 +71,8 @@ def show_page():
         cultivation_page()
     elif page == "data":
         user_data_page()
-    elif page == "info":
-        info_page()
+    elif page == "homepage":
+        homepage()
     elif page == "privacy_policy":
         privacy_policy_page()
     elif page == "vision":
