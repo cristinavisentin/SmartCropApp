@@ -5,26 +5,34 @@ st.set_page_config(
     page_icon="🌱",
 )
 
-from auth import sign_in_page, sign_up_page
+from auth import sign_in_page, sign_up_page, validate_token, logout, get_username
 from body_app import single_prediction_page, multiple_prediction_page
-from cookie_handler import validate_token, logout, get_persistent_session_auth_token, get_username
 from menu_pages.home_page import homepage
 from menu_pages.user_data import user_data_page
 from menu_pages.privacy_policy import privacy_policy_page
 from menu_pages.vision import vision_page
 from prediction_result import prediction_result_page
+from streamlit_cookies_controller import CookieController
 
-if "authenticated" not in st.session_state:
+controller = CookieController()
+token = controller.get("SmartCrop_auth_token")
+
+if "authenticated" not in st.session_state: # first open or refresh
     st.session_state["authenticated"] = False
+    st.session_state["valid_token_decoded"] = False
     st.session_state["username"] = None
     st.session_state["page"] = "sign_in"
-    print("SESSION STATE NEL PRIMO IF: ", st.session_state["authenticated"])
+    print("first open or refresh")
 
-    if not st.session_state["authenticated"] and validate_token(get_persistent_session_auth_token()):
+
+if validate_token(token):
+        st.session_state["valid_token_decoded"] = True
+
+if not st.session_state["authenticated"] and st.session_state["valid_token_decoded"]: # first open or refresh AND VALID TOKEN
         st.session_state["authenticated"] = True
-        st.session_state["username"] = get_username(get_persistent_session_auth_token())
+        st.session_state["username"] = get_username(token)
         st.session_state["page"] = "homepage"
-        print("SESSION STATE NEL SECONDO IF: ", st.session_state["authenticated"])
+        print("first open or refresh AND VALID TOKEN: ", token)
 
 
 def render_sidebar():
