@@ -20,7 +20,9 @@ def get_prediction(plant, country, avg_temperature, avg_rainfall):
     other_vals[0].extend(encoded[0])
     to_predict = scaler.transform(other_vals)
 
-    print("modello ottenuto in get_prediction(): ", model.predict(to_predict))
+    acres = st.session_state["acres_to_cultivate"]
+    print("acres received: ", acres)
+    print("model in get_prediction(): ", model.predict(to_predict))
     return 1
 
 def display_result(plant, country, avg_temperature, avg_rainfall):
@@ -29,8 +31,8 @@ def display_result(plant, country, avg_temperature, avg_rainfall):
     print("avg_rainfall: ", avg_rainfall, "mm, avg_temperature: ", avg_temperature, "C")
     st.write("avg_rainfall: ", avg_rainfall, "mm, avg_temperature: ", avg_temperature, "C")
     predit = get_prediction(plant, country, avg_temperature, avg_rainfall)
-    print("predit: ", predit, "etti/ettaro")
-    st.write("predit: ", predit, "etti/ettaro")
+    print("predit: ", predit, "ounces/hectare")
+    st.write("predit: ", predit, "ounces/hectare")
 
 
 def prediction_result_page():
