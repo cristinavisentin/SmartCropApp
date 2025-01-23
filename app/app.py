@@ -7,10 +7,10 @@ st.set_page_config(
 
 from auth import sign_in_page, sign_up_page, validate_token, logout, get_username
 from start_prediction_interface import single_prediction_page, multiple_prediction_page
-from menu_pages.home_page import homepage
-from menu_pages.user_data import user_data_page
-from menu_pages.privacy_policy import privacy_policy_page
-from menu_pages.vision import vision_page
+from static_menu_pages.home_page import homepage
+from past_predictions import user_data_page
+from static_menu_pages.privacy_policy import privacy_policy_page
+from static_menu_pages.vision import vision_page
 from prediction_result import prediction_result_page
 from streamlit_cookies_controller import CookieController
 
