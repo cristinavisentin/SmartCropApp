@@ -1,9 +1,14 @@
 import openmeteo_requests
 import requests_cache
+import numpy as np
 from retry_requests import retry
-from geopy.geocoders import Nominatim
 from datetime import datetime
 # Thanks to https://open-meteo.com/en/docs/historical-weather-api for the data
+
+def calculate_annual_avg_temperature(temp_max, temp_min):
+    daily_avg = (temp_max + temp_min) / 2
+    return round(np.mean(daily_avg), 1)
+
 
 def get_climate_data(latitude, longitude):
     cache_session = requests_cache.CachedSession('.cache', expire_after=-1)
@@ -28,17 +33,11 @@ def get_climate_data(latitude, longitude):
     daily = response.Daily()
     temperature_max = daily.Variables(0).ValuesAsNumpy()
     temperature_min = daily.Variables(1).ValuesAsNumpy()
+    daily_avg = (temperature_max + temperature_min) / 2
+    avg_yearly_temperature = round(np.mean(daily_avg), 1)
+
     precipitation_sum = daily.Variables(2).ValuesAsNumpy()
+    precipitation_sum = float(precipitation_sum.sum())
+    precipitation_sum = int(round(precipitation_sum))
 
-    avg_temperature = ((temperature_max + temperature_min) / 2).mean()
-    avg_rainfall = precipitation_sum.sum()
-    return avg_temperature, avg_rainfall
-
-
-def get_country_from_coordinates(latitude, longitude):
-    geolocator = Nominatim(user_agent="geoapi")
-    location = geolocator.reverse((latitude, longitude), exactly_one=True)
-    if location and "country" in location.raw["address"]:
-        return location.raw["address"]["country"]
-    else:
-        raise ValueError("Unable to determine the country from the provided coordinates.")
+    return avg_yearly_temperature, precipitation_sum

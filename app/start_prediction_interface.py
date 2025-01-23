@@ -2,6 +2,7 @@ import streamlit as st
 import geocoder
 from geopy.geocoders import Nominatim
 import time
+from climate_data import get_climate_data
 
 plant_options = ["Rice", "Cassava", "Maize", "Plantains", "Potatoes", "Sorghum", "Soybeans", "Sweet", "Potatoes",
            "Wheat", "Yams"]
@@ -38,9 +39,16 @@ def get_coordinates_from_country(country_name):
         raise ValueError(f"Unable to find coordinates for country: {country_name}")
     return location.latitude, location.longitude
 
+def get_country_from_coordinates(latitude, longitude):
+    geolocator = Nominatim(user_agent="geoapi")
+    location = geolocator.reverse((latitude, longitude), exactly_one=True)
+    if location and "country" in location.raw["address"]:
+        return location.raw["address"]["country"]
+    else:
+        raise ValueError("Unable to determine the country from the provided coordinates.")
 
 
-def get_country_from_location():
+def get_geolocation():
     st.write(f"Getting position...")
     g = geocoder.ip("me")
     if g.ok:
@@ -70,12 +78,22 @@ def multiple_prediction_page():
     if st.button("Go to prediction"):
         co11, co12 = get_coordinates_from_country(chosen_country1)
         time.sleep(2)
+        avg_temperature1, avg_rainfall1 = get_climate_data(co11, co12)
+        print("avg_temperature1: ", avg_temperature1, " avg_rainfall1: ", avg_rainfall1)
         co21, co22 = get_coordinates_from_country(chosen_country2)
         time.sleep(2)
+        avg_temperature2, avg_rainfall2 = get_climate_data(co21, co22)
+        print("avg_temperature2: ", avg_temperature2, " avg_rainfall2: ", avg_rainfall2)
         co31, co32 = get_coordinates_from_country(chosen_country3)
+        time.sleep(1)
+        avg_temperature3, avg_rainfall3 = get_climate_data(co31, co32)
+        print("avg_temperature3: ", avg_temperature3, " avg_rainfall3: ", avg_rainfall3)
+
+
         st.session_state["plant"] = [chosen_plant1, chosen_plant2, chosen_plant3]
-        st.session_state["location"] = [[co11, co12], [co21, co22], [co31, co32]]
-        time.sleep(2)
+        st.session_state["country"] = [chosen_country1, chosen_country2, chosen_country3]
+        st.session_state["avg_temperature"] = [avg_temperature1, avg_temperature2, avg_temperature3]
+        st.session_state["avg_rainfall"] = [avg_rainfall1, avg_rainfall2, avg_rainfall3]
         st.session_state["page"] = "prediction_result"
         st.rerun()
 
@@ -95,18 +113,32 @@ def single_prediction_page():
     col1, col2 = st.columns(2)
     with col1:
         if st.button("get geolocation and go to prediction"):
-            co1, co2 = get_country_from_location()
-            time.sleep(4)
-            st.session_state["plant"] = [[chosen_plant]]
-            st.session_state["location"] = [[co1, co2]]
+            co1, co2 = get_geolocation()
+            time.sleep(2)
+            avg_temperature, avg_rainfall = get_climate_data(co1, co2)
+            print("avg_temperature: ", avg_temperature, " avg_rainfall: ", avg_rainfall)
+            time.sleep(1)
+            st.session_state["plant"] = [chosen_plant]
+            st.session_state["country"] = [get_country_from_coordinates(co1, co2)]
+            st.session_state["avg_temperature"] = [avg_temperature]
+            st.session_state["avg_rainfall"] = [avg_rainfall]
+
             st.session_state["page"] = "prediction_result"
+
             st.rerun()
     with col2:
         chosen_country = st.selectbox("Select your Country:", country_options)
         if st.button("Go to prediction"):
             co1, co2 = get_coordinates_from_country(chosen_country)
-            st.session_state["plant"] = [[chosen_plant]]
-            st.session_state["location"] = [[co1, co2]]
+            time.sleep(2)
+            avg_temperature, avg_rainfall = get_climate_data(co1, co2)
+            print("avg_temperature: ", avg_temperature, " avg_rainfall: ", avg_rainfall)
+            time.sleep(1)
+            st.session_state["plant"] = [chosen_plant]
+            st.session_state["country"] = [chosen_country]
+            st.session_state["avg_temperature"] = [avg_temperature]
+            st.session_state["avg_rainfall"] = [avg_rainfall]
+
             st.session_state["page"] = "prediction_result"
             time.sleep(3)
             st.rerun()
