@@ -42,7 +42,7 @@ def check_user_credentials(username, password):
                 return True, None
     except (sqlite3.DatabaseError, TypeError, ValueError) as e:
         print(f"An error occurred while processing the request: {e}")
-        print("You probably need to initializate the database")
+        print("You probably need to initialize the database")
         return False, str(e)
     return False, None
 
@@ -53,10 +53,6 @@ def check_username_in_db(username):
         cursor = conn.cursor()
         cursor.execute("SELECT * FROM users")
         rows = cursor.fetchall()
-        print("'user' table content in check_username_in_db:")
-        for row in rows:
-            print(row)
-        print("\n")
         cursor.execute("SELECT 1 FROM users WHERE username = ?", (username,))
         result = cursor.fetchone()
 

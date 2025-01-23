@@ -35,7 +35,6 @@ def validate_token(token):
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
         username = payload.get("username")
-        print("username CORRECTLY DECODED in validate_token: ", username)
         if not username:
             print("Token payload missing 'username'")
             return False

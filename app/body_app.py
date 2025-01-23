@@ -3,7 +3,7 @@ import geocoder
 from geopy.geocoders import Nominatim
 import time
 
-plant_options = ["Rice", "Cassava", "Maize", "Rice", "Plantains", "Potatoes", "Sorghum", "Soybeans", "Sweet", "Potatoes",
+plant_options = ["Rice", "Cassava", "Maize", "Plantains", "Potatoes", "Sorghum", "Soybeans", "Sweet", "Potatoes",
            "Wheat", "Yams"]
 
 country_options = [
