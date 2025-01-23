@@ -4,7 +4,7 @@ from geopy.geocoders import Nominatim
 import time
 from climate_data import get_climate_data
 
-plant_options = ["Rice", "Cassava", "Maize", "Plantains", "Potatoes", "Sorghum", "Soybeans", "Sweet", "Potatoes",
+plant_options = ["Rice", "Cassava", "Maize", "Plantains", "Potatoes", "Sorghum", "Soybeans", "Sweet potatoes", "Potatoes",
            "Wheat", "Yams"]
 
 country_options = [
