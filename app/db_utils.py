@@ -62,3 +62,40 @@ def check_username_in_db(username):
         return False
 
 
+def add_prediction_to_db(username, plant, country, hectares, prediction):
+    try:
+        conn = create_connection("users.db")
+        cursor = conn.cursor()
+        cursor.execute("INSERT INTO prediction_table (username, plant, country, hectares, prediction) VALUES (?, ?, ?, ?, ?)", (username, plant, country, hectares, prediction))
+        conn.commit()
+        print("PREDICTION ADDED TO DATABASE: ", username, plant, country, hectares, prediction)
+        conn.close()
+        return True, None
+    except sqlite3.IntegrityError:
+        print("This prediction is already been made")
+        return False
+    except sqlite3.OperationalError as e:
+        print(f"Database error: {e}")
+        return False, str(e)
+    except Exception as e:
+        print(f"Unexpected error: {e}")
+        return False, str(e)
+
+
+def get_predictions_by_username(username):
+    try:
+        conn = sqlite3.connect("users.db")
+        cursor = conn.cursor()
+        cursor.execute("""
+            SELECT plant, country, hectares, prediction
+            FROM prediction_table
+            WHERE username = ?
+        """, (username,))
+        results = cursor.fetchall()
+        conn.close()
+        return results
+    except sqlite3.Error as e:
+        print("Database error: ", e)
+    return None
+
+

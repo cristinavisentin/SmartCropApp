@@ -12,10 +12,22 @@ def create_tables():
     )
     """)
 
+    # Creazione della tabella delle previsioni associata agli utenti
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS prediction_table (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        username TEXT NOT NULL,
+        plant TEXT NOT NULL,
+        country TEXT NOT NULL,
+        hectares REAL NOT NULL,
+        prediction REAL NOT NULL,
+        FOREIGN KEY (username) REFERENCES users(username) ON DELETE CASCADE
+    )
+    """)
+
     conn.commit()
     conn.close()
-    print("Table 'users' created (if it didn't already exist).")
-
+    print("Tables 'users' and 'prediction_table' created (if they didn't already exist).")
 
 def add_test_user():
     conn = sqlite3.connect("users.db")
@@ -31,6 +43,19 @@ def add_test_user():
 
     conn.close()
 
+def add_test_prediction():
+    conn = sqlite3.connect("users.db")
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute("INSERT INTO prediction_table (username, plant, country, hectares, prediction) VALUES (?, ?, ?, ?, ?)",
+                       ("admin", "Wheat", "Italy", 2.5, 300.0))
+        conn.commit()
+        print("Test prediction added for user 'admin'.")
+    except sqlite3.IntegrityError as e:
+        print(f"Error adding test prediction: {e}")
+
+    conn.close()
 
 def display_database():
     conn = sqlite3.connect("users.db")
@@ -45,6 +70,14 @@ def display_database():
     else:
         print("No users found in database.")
 
+    cursor.execute("SELECT id, username, plant, country, hectares, prediction FROM prediction_table")
+    predictions = cursor.fetchall()
+    if predictions:
+        print("\nPredictions in database:")
+        for prediction in predictions:
+            print(f"ID: {prediction[0]}, Username: {prediction[1]}, Plant: {prediction[2]}, Country: {prediction[3]}, Hectares: {prediction[4]}, Prediction: {prediction[5]} grams")
+    else:
+        print("No predictions found in database.")
 
     conn.close()
 
@@ -52,5 +85,6 @@ def display_database():
 if __name__ == "__main__":
     create_tables()
     add_test_user()
+    add_test_prediction()
     display_database()
-    print("\nDatabase setup completed")
+    print("\nDatabase setup completed.")
