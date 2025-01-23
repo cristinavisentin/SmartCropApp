@@ -2,15 +2,15 @@
 
 ## Preprocessing
 
-- In order to obtain the refined dataset, the column `pesticides_tonnes` is dropped as it encodes data not relevant to the purpose of the application and does not align with the interest of the company.
-- Outliers not respecting the IQR rule are dropped from the dataset to avoid negative influence to the predictions.
-- Duplicated rows are dropped from the dataset.
+- In order to obtain the refined dataset, the column `pesticides_tonnes` is **dropped** as it encodes data not relevant to the purpose of the application and does not align with the interest of the company.
+- **Outliers** not respecting the IQR rule are dropped from the dataset to avoid negative influence to the predictions.
+- **Duplicated rows** are dropped from the dataset.
 
 ## Encoder
 
 The `OneHotEncoder` object is saved to the `encoder.pkl` file to be ready to use in the application:
 - it allows to take user input and encode categorical features like Country and crop item into numeric ones
-- once encoded these value with `encoder.transform(input[['Item', 'Area']])` they can be used in the following steps
+- once encoded these value with `encoder.transform([['Area', 'Item']])` they can be used in the following steps
 
 ## Scaler
 
@@ -28,7 +28,7 @@ The `RandomForestRegressor` object is saved to the `model.pkl` file to be ready 
   - `min_samples_split`: 4
   - `min_samples_leaf`: 2
   - `max_features`: None
-  - `criterion`: poisson
+  - `criterion`: squared error
 - predictions are performed with `model.predict(x)` and return a number representing the estimated **yield in hg/ha** for the given country and crop item.
 - the application will only need to multiply it to the number of hectares to obtain the estimated yield in hectograms (units can change).
 - metrics used to assess the model are **cross fold validation** using the standard metric of the regressor.
