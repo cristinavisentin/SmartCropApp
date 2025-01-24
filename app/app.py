@@ -21,7 +21,7 @@ if "authenticated" not in st.session_state: # first open or refresh
     st.session_state["authenticated"] = False
     st.session_state["valid_token_decoded"] = False
     st.session_state["username"] = None
-    st.session_state["page"] = "sign_in"
+    st.session_state["page"] = "homepage"
     print("first open or refresh")
 
 

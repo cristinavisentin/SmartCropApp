@@ -1,9 +1,9 @@
 import streamlit as st
 
 def vision_page():
-    st.title("Privacy Policy")
+    st.title("Vision")
     st.markdown("""
-    ### Our Vision: Promoting Sustainable Farming
+    ### Promoting Sustainable Farming
     
     At SmartCrop, we envision a future where agriculture is both productive and sustainable. Our commitment is to equip farmers with accurate, AI-driven predictions that optimize crop yields while preserving the environment's health.
     
