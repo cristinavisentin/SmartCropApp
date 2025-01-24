@@ -9,6 +9,7 @@ def user_data_page():
     if results:
         df = pd.DataFrame(results, columns=["Plant", "Country", "Hectares", "Prediction (tons)"])
         df["Hectares"] = df["Hectares"].apply(lambda x: int(x) if x.is_integer() else round(x, 2))
+        df["Prediction (tons)"] = df["Hectares"].apply(lambda x: int(x) if x.is_integer() else round(x, 2))
         st.table(df)
     else:
         st.warning(f"No predictions found, make one!")

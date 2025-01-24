@@ -121,7 +121,6 @@ def single_prediction_page():
 
     chosen_plant = st.selectbox("Select which plant you want to grow:", plant_options)
     acres_quantity = st.number_input("In how many acres of land do you want to grow this plant?", min_value=1, max_value=1000, value=1, key = "acres")
-    print(f"The number of  acres is: {acres_quantity}")
     st.session_state["acres_to_cultivate"] = [acres_quantity]
 
     st.write("You can select your country in two ways...")
