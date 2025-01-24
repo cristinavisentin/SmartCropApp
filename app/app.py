@@ -39,7 +39,9 @@ def render_sidebar():
         if st.sidebar.button("Our vision"):
             st.session_state["page"] = "vision"
         if st.sidebar.button("Log Out"):
+            print("logout clicked")
             logout()
+            print("logout func finisched")
             st.rerun()
     else:
         st.sidebar.title("Menu")
