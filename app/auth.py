@@ -1,10 +1,10 @@
 import streamlit as st
 import time
 import db_utils
-import uuid
 import datetime
 import jwt
 from streamlit_cookies_controller import CookieController
+from db_utils import check_username_in_db
 
 controller = CookieController()
 SECRET_KEY = "123"
@@ -12,11 +12,15 @@ SECRET_KEY = "123"
 def logout():
     try:
         controller.remove("SmartCrop_auth_token")
-    except Exception:
+        time.sleep(1)
+        controller.refresh()
         st.session_state["authenticated"] = False
         st.session_state["username"] = None
-        st.write("You are correctly logged out")
+        st.session_state["valid_token_decoded"] = False
         st.session_state["page"] = "sign_in"
+        print("You are correctly logged out")
+    except Exception:
+        print("Error in logout")
 
 
 def generate_token(username):
@@ -28,13 +32,21 @@ def generate_token(username):
     token = jwt.encode(payload, SECRET_KEY, algorithm="HS256")
     return token
 
-def validate_token(token):
-    if token is None:
+def validate_token():
+    try:
+        controller.refresh()
+        time.sleep(1)
+        token = controller.get("SmartCrop_auth_token")
+        print("token found", token)
+        if token is None:
+            return False
+    except Exception:
+        print("token not found")
         return False
-    from db_utils import check_username_in_db
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
         username = payload.get("username")
+        st.session_state["username"] = username
         if not username:
             print("Token payload missing 'username'")
             return False
@@ -77,18 +89,15 @@ def get_username(token):
 
 
 def save_persistent_session_auth_token(username):
-    controller.set("SmartCrop_auth_token", generate_token(username), max_age=7*86400, secure=True)
+    try:
+        controller.set("SmartCrop_auth_token", generate_token(username), max_age=7*86400, secure=True)
+        print("cookie with token saved")
+    except Exception:
+        print("It's non been possibile to set the token")
 
-def get_session_id():
-    if "session_id" not in st.session_state:
-        st.session_state["session_id"] = str(uuid.uuid4())
-    return st.session_state["session_id"]
 
 def sign_in_page():
     st.title("Sign in")
-    session_id = get_session_id()
-    st.session_state["session_id_" + session_id] = session_id
-
     username = st.text_input("Username")
     password = st.text_input("Password", type="password")
     remember = st.checkbox("Do you want to stay logged in?")
