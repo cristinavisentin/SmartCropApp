@@ -1,6 +1,6 @@
 import streamlit as st
 import pickle
-
+import time
 import os
 from db_utils import add_prediction_to_db
 
@@ -17,11 +17,18 @@ with open(os.path.join(base_dir, '../artifacts/model.pkl'), 'rb') as file:
 
 def get_prediction(plant, country, avg_temperature, avg_rainfall, hectares):
     print("VALUED USED IN THIS PREDICTION:", plant, country, avg_temperature, avg_rainfall)
-    encoded = encoder.transform([[country, plant]])
-    other_vals = [[2025, avg_rainfall, avg_temperature]]
+    try:
+        encoded = encoder.transform([[country, plant]])
+        other_vals = [[2025, avg_rainfall, avg_temperature]]
 
-    other_vals[0].extend(encoded[0])
-    to_predict = scaler.transform(other_vals)
+        other_vals[0].extend(encoded[0])
+        to_predict = scaler.transform(other_vals)
+    except Exception as e:
+        st.error("the data you entered is not compatible with the model")
+        print("the data user entered is not compatible with the model: ", e)
+        st.session_state["page"] = "crop_application_single_prediction"
+        time.sleep(3)
+        st.rerun()
 
     print("hectares received: ", hectares)
     prediction = model.predict(to_predict)[0]

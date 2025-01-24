@@ -32,21 +32,30 @@ country_options = [
 
 
 def get_coordinates_from_country(country_name):
-    geolocator = Nominatim(user_agent="geoapi")
-    location = geolocator.geocode(country_name, timeout=5)
-
-    if not location:
-        raise ValueError(f"Unable to find coordinates for country: {country_name}")
-    return location.latitude, location.longitude
+    try:
+        geolocator = Nominatim(user_agent="geoapi")
+        location = geolocator.geocode(country_name, timeout=5)
+        if location:
+            return location.latitude, location.longitude
+        st.warning(f"Unable to find coordinates for country: {country_name}")
+        time.sleep(3)
+        st.rerun()
+    except Exception as e:
+        st.warning(f"Error while fetching coordinates: {str(e)}")
+        return None
 
 def get_country_from_coordinates(latitude, longitude):
-    geolocator = Nominatim(user_agent="geoapi")
-    location = geolocator.reverse((latitude, longitude), exactly_one=True)
-    if location and "country" in location.raw["address"]:
-        return location.raw["address"]["country"]
-    else:
-        raise ValueError("Unable to determine the country from the provided coordinates.")
-
+    try:
+        geolocator = Nominatim(user_agent="geoapi")
+        location = geolocator.reverse((latitude, longitude), exactly_one=True, language="en")
+        if location and "country" in location.raw.get("address", {}):
+            return location.raw["address"]["country"]
+        st.warning("Country information not available for the provided coordinates.")
+        time.sleep(3)
+        st.rerun()
+    except Exception as e:
+        st.warning(f"Unable to determine the country due to an error: {str(e)}")
+        return None
 
 def get_geolocation():
     st.write(f"Getting position...")
@@ -54,7 +63,6 @@ def get_geolocation():
     if g.ok:
         lat, lon = g.latlng
         st.success(f"Your position is: Lat {lat}, Lon {lon}")
-        print("country got from geolocation: ", lat, lon)
         return lat, lon
     return None
 
