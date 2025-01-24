@@ -1,6 +1,6 @@
 import streamlit as st
 
-def info_page():
+def homepage():
     st.title("SmartCrop")
     st.markdown("""
 *Hello there, welcome to SmartCrop!*  

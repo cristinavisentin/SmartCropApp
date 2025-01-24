@@ -5,36 +5,45 @@ st.set_page_config(
     page_icon="🌱",
 )
 
-from auth import sign_in_page, sign_up_page
-from body_app import cultivation_page
-from cookie_handler import validate_token, logout, get_persistent_session_auth_token, get_username
-from menu_pages.info import info_page
-from menu_pages.user_data import user_data_page
-from menu_pages.privacy_policy import privacy_policy_page
-from menu_pages.vision import vision_page
+from auth import sign_in_page, sign_up_page, validate_token, logout, get_username
+from start_prediction_interface import single_prediction_page, multiple_prediction_page
+from static_menu_pages.home_page import homepage
+from past_predictions import user_data_page
+from static_menu_pages.privacy_policy import privacy_policy_page
+from static_menu_pages.vision import vision_page
+from prediction_result import prediction_result_page
+from streamlit_cookies_controller import CookieController
 
-if "authenticated" not in st.session_state:
+controller = CookieController()
+token = controller.get("SmartCrop_auth_token")
+
+if "authenticated" not in st.session_state: # first open or refresh
     st.session_state["authenticated"] = False
+    st.session_state["valid_token_decoded"] = False
     st.session_state["username"] = None
     st.session_state["page"] = "sign_in"
-    print("SESSION STATE NEL PRIMO IF: ", st.session_state["authenticated"])
+    print("first open or refresh")
 
-    if not st.session_state["authenticated"] and validate_token(get_persistent_session_auth_token()):
+
+if validate_token(token):
+        st.session_state["valid_token_decoded"] = True
+
+if not st.session_state["authenticated"] and st.session_state["valid_token_decoded"]: # first open or refresh AND VALID TOKEN
         st.session_state["authenticated"] = True
-        st.session_state["username"] = get_username(get_persistent_session_auth_token())
-        st.session_state["page"] = "crop_application"
-        print("SESSION STATE NEL SECONDO IF: ", st.session_state["authenticated"])
+        st.session_state["username"] = get_username(token)
+        st.session_state["page"] = "homepage"
+        print("first open or refresh AND VALID TOKEN: ", token)
 
 
 def render_sidebar():
     if st.session_state["authenticated"]:
         st.sidebar.title(f"Welcome back {st.session_state['username']}!")
         if st.sidebar.button("Process data"):
-            st.session_state["page"] = "crop_application"
+            st.session_state["page"] = "crop_application_single_prediction"
         if st.sidebar.button("My data"):
             st.session_state["page"] = "data"
         if st.sidebar.button("What is this app?"):
-            st.session_state["page"] = "info"
+            st.session_state["page"] = "homepage"
         if st.sidebar.button("Privacy policy"):
             st.session_state["page"] = "privacy_policy"
         if st.sidebar.button("Our vision"):
@@ -52,7 +61,7 @@ def render_sidebar():
         if st.sidebar.button("Don't have an account?"):
             st.session_state["page"] = "sign_up"
         if st.sidebar.button("What is this app?"):
-            st.session_state["page"] = "info"
+            st.session_state["page"] = "homepage"
         if st.sidebar.button("Privacy policy"):
             st.session_state["page"] = "privacy_policy"
         if st.sidebar.button("Our vision"):
@@ -67,12 +76,16 @@ def show_page():
         sign_in_page()
     elif page == "sign_up":
         sign_up_page()
-    elif page == "crop_application":
-        cultivation_page()
+    elif page == "crop_application_single_prediction":
+        single_prediction_page()
+    elif page == "crop_application_multiple_prediction":
+        multiple_prediction_page()
+    elif page == "prediction_result":
+        prediction_result_page()
     elif page == "data":
         user_data_page()
-    elif page == "info":
-        info_page()
+    elif page == "homepage":
+        homepage()
     elif page == "privacy_policy":
         privacy_policy_page()
     elif page == "vision":

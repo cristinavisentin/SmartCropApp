@@ -1,8 +1,6 @@
 import sqlite3
 import hashlib
 import os
-from cookie_handler import save_persistent_session_auth_token
-SECRET_KEY = "123"
 
 def hash_password(password, salt):
     hashed_password = hashlib.sha256(salt + password.encode()).hexdigest()
@@ -44,7 +42,7 @@ def check_user_credentials(username, password):
                 return True, None
     except (sqlite3.DatabaseError, TypeError, ValueError) as e:
         print(f"An error occurred while processing the request: {e}")
-        print("You probably need to initializate the database")
+        print("You probably need to initialize the database")
         return False, str(e)
     return False, None
 
@@ -55,10 +53,6 @@ def check_username_in_db(username):
         cursor = conn.cursor()
         cursor.execute("SELECT * FROM users")
         rows = cursor.fetchall()
-        print("'user' table content in check_username_in_db:")
-        for row in rows:
-            print(row)
-        print("\n")
         cursor.execute("SELECT 1 FROM users WHERE username = ?", (username,))
         result = cursor.fetchone()
 
@@ -66,5 +60,42 @@ def check_username_in_db(username):
     except sqlite3.Error as e:
         print("Database error: ", e)
         return False
+
+
+def add_prediction_to_db(username, plant, country, hectares, prediction):
+    try:
+        conn = create_connection("users.db")
+        cursor = conn.cursor()
+        cursor.execute("INSERT INTO prediction_table (username, plant, country, hectares, prediction) VALUES (?, ?, ?, ?, ?)", (username, plant, country, hectares, prediction))
+        conn.commit()
+        print("PREDICTION ADDED TO DATABASE: ", username, plant, country, hectares, prediction)
+        conn.close()
+        return True, None
+    except sqlite3.IntegrityError:
+        print("This prediction is already been made")
+        return False
+    except sqlite3.OperationalError as e:
+        print(f"Database error: {e}")
+        return False, str(e)
+    except Exception as e:
+        print(f"Unexpected error: {e}")
+        return False, str(e)
+
+
+def get_predictions_by_username(username):
+    try:
+        conn = sqlite3.connect("users.db")
+        cursor = conn.cursor()
+        cursor.execute("""
+            SELECT plant, country, hectares, prediction
+            FROM prediction_table
+            WHERE username = ?
+        """, (username,))
+        results = cursor.fetchall()
+        conn.close()
+        return results
+    except sqlite3.Error as e:
+        print("Database error: ", e)
+    return None
 
 
