@@ -1,7 +1,7 @@
 import streamlit as st
 
 def homepage():
-    st.title("SmartCrop")
+    st.title("🌱 SmartCrop")
     st.markdown("""
 *Hello there, welcome to SmartCrop!*  
 We’re thrilled to introduce you to our platform, designed to help you maximize your crop yield effortlessly. Powered by Artificial Intelligence, SmartCrop leverages real-time data to accurately predict yields and enable you to compare the performance of different crops on your land.  
