@@ -98,5 +98,4 @@ temp_files/
 # Ignore generated files from third-party tools
 *.ipynb_convert/
 
-/users.db
 .devcontainer
