@@ -4,6 +4,7 @@ import db_utils
 import datetime
 import jwt
 from streamlit_cookies_controller import CookieController
+from db_utils import check_username_in_db
 
 controller = CookieController()
 SECRET_KEY = "123"
@@ -11,11 +12,15 @@ SECRET_KEY = "123"
 def logout():
     try:
         controller.remove("SmartCrop_auth_token")
-    except Exception:
+        time.sleep(1)
+        controller.refresh()
         st.session_state["authenticated"] = False
         st.session_state["username"] = None
-        st.write("You are correctly logged out")
+        st.session_state["valid_token_decoded"] = False
         st.session_state["page"] = "sign_in"
+        print("You are correctly logged out")
+    except Exception:
+        print("Error in logout")
 
 
 def generate_token(username):
@@ -27,28 +32,21 @@ def generate_token(username):
     token = jwt.encode(payload, SECRET_KEY, algorithm="HS256")
     return token
 
-def get_crop_cookie():
+def validate_token():
     try:
         controller.refresh()
         time.sleep(1)
-        controller.getAll()
-        time.sleep(1)
-        print("Cookie founded: ", controller.getAll())
         token = controller.get("SmartCrop_auth_token")
-        return token
+        print("token found", token)
+        if token is None:
+            return False
     except Exception:
         print("token not found")
-    return None
-
-
-def validate_token():
-    token = get_crop_cookie()
-    if token is None:
         return False
-    from db_utils import check_username_in_db
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
         username = payload.get("username")
+        st.session_state["username"] = username
         if not username:
             print("Token payload missing 'username'")
             return False
@@ -93,6 +91,7 @@ def get_username(token):
 def save_persistent_session_auth_token(username):
     try:
         controller.set("SmartCrop_auth_token", generate_token(username), max_age=7*86400, secure=True)
+        print("cookie with token saved")
     except Exception:
         print("It's non been possibile to set the token")
 

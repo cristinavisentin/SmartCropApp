@@ -40,9 +40,6 @@ def render_sidebar():
             st.session_state["page"] = "vision"
         if st.sidebar.button("Log Out"):
             logout()
-            st.session_state["authenticated"] = False
-            st.session_state["username"] = None
-            st.session_state["page"] = "sign_in"
             st.rerun()
     else:
         st.sidebar.title("Menu")
