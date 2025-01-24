@@ -27,7 +27,22 @@ def generate_token(username):
     token = jwt.encode(payload, SECRET_KEY, algorithm="HS256")
     return token
 
-def validate_token(token):
+def get_crop_cookie():
+    try:
+        controller.refresh()
+        time.sleep(1)
+        controller.getAll()
+        time.sleep(1)
+        print("Cookie founded: ", controller.getAll())
+        token = controller.get("SmartCrop_auth_token")
+        return token
+    except Exception:
+        print("token not found")
+    return None
+
+
+def validate_token():
+    token = get_crop_cookie()
     if token is None:
         return False
     from db_utils import check_username_in_db
@@ -76,7 +91,10 @@ def get_username(token):
 
 
 def save_persistent_session_auth_token(username):
-    controller.set("SmartCrop_auth_token", generate_token(username), max_age=7*86400, secure=True)
+    try:
+        controller.set("SmartCrop_auth_token", generate_token(username), max_age=7*86400, secure=True)
+    except Exception:
+        print("It's non been possibile to set the token")
 
 
 def sign_in_page():
