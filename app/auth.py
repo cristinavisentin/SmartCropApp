@@ -1,7 +1,6 @@
 import streamlit as st
 import time
 import db_utils
-import uuid
 import datetime
 import jwt
 from streamlit_cookies_controller import CookieController
@@ -79,16 +78,9 @@ def get_username(token):
 def save_persistent_session_auth_token(username):
     controller.set("SmartCrop_auth_token", generate_token(username), max_age=7*86400, secure=True)
 
-def get_session_id():
-    if "session_id" not in st.session_state:
-        st.session_state["session_id"] = str(uuid.uuid4())
-    return st.session_state["session_id"]
 
 def sign_in_page():
     st.title("Sign in")
-    session_id = get_session_id()
-    st.session_state["session_id_" + session_id] = session_id
-
     username = st.text_input("Username")
     password = st.text_input("Password", type="password")
     remember = st.checkbox("Do you want to stay logged in?")
