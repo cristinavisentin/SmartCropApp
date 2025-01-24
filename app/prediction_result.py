@@ -32,6 +32,7 @@ def get_prediction(plant, country, avg_temperature, avg_rainfall, hectares):
         st.rerun()
     prediction = model.predict(to_predict)[0]
     predicted_quintals = round(((prediction / 1000) * hectares), 2)
+    print("prediction in get_prediction(): ", predicted_quintals)
     return predicted_quintals
 
 def display_result_and_add_to_db(plant, country, avg_temperature, avg_rainfall, hectares):

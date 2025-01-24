@@ -19,7 +19,7 @@ def create_tables():
         username TEXT NOT NULL,
         plant TEXT NOT NULL,
         country TEXT NOT NULL,
-        hectares REAL NOT NULL,
+        hectares INTEGER NOT NULL,
         prediction REAL NOT NULL,
         FOREIGN KEY (username) REFERENCES users(username) ON DELETE CASCADE
     )
