@@ -5,10 +5,12 @@ from db_utils import get_predictions_by_username
 def user_data_page():
     st.title("These are your predictions")
 
-    results = get_predictions_by_username(st.session_state["username"])
-    if results:
-        df = pd.DataFrame(results, columns=["Plant", "Country", "Hectares", "Prediction (tons)"])
-        st.table(df.style.format({"Prediction (tons)": "{:.2f}"}))
+    if "username" in st.session_state and st.session_state.get("username") is not None:
+        results = get_predictions_by_username(st.session_state["username"])
+        if results:
+            df = pd.DataFrame(results, columns=["Plant", "Country", "Hectares", "Prediction (tons)"])
+            st.table(df.style.format({"Prediction (tons)": "{:.2f}"}))
+        else:
+            st.warning("No predictions found, make one!")
     else:
-        st.warning(f"No predictions found, make one!")
-
+        st.warning("there is no user logged in yet")
