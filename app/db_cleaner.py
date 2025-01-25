@@ -1,5 +1,7 @@
 import sqlite3
-conn = sqlite3.connect("users.db")
+import os
+DB_FILE = os.path.join(os.path.dirname(__file__), "users.db")
+conn = sqlite3.connect(DB_FILE)
 cursor = conn.cursor()
 cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
 tables = cursor.fetchall()

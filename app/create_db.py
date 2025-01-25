@@ -1,7 +1,9 @@
 import sqlite3
+import os
+DB_FILE = os.path.join(os.path.dirname(__file__), "users.db")
 
 def create_tables():
-    conn = sqlite3.connect("users.db")
+    conn = sqlite3.connect(DB_FILE)
     cursor = conn.cursor()
 
     cursor.execute("""
@@ -12,7 +14,6 @@ def create_tables():
     )
     """)
 
-    # Creazione della tabella delle previsioni associata agli utenti
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS prediction_table (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -30,12 +31,12 @@ def create_tables():
     print("Tables 'users' and 'prediction_table' created (if they didn't already exist).")
 
 def add_test_user():
-    conn = sqlite3.connect("users.db")
+    conn = sqlite3.connect(DB_FILE)
     cursor = conn.cursor()
 
     try:
         cursor.execute("INSERT INTO users (username, hashed_password, salt) VALUES (?, ?, ?)",
-                       ("admin", "h_pdw", "1234"))
+                       ("test", "test", "1234"))
         conn.commit()
         print("Test user 'admin' added.")
     except sqlite3.IntegrityError:
@@ -44,7 +45,7 @@ def add_test_user():
     conn.close()
 
 def add_test_prediction():
-    conn = sqlite3.connect("users.db")
+    conn = sqlite3.connect(DB_FILE)
     cursor = conn.cursor()
 
     try:
@@ -58,7 +59,7 @@ def add_test_prediction():
     conn.close()
 
 def display_database():
-    conn = sqlite3.connect("users.db")
+    conn = sqlite3.connect(DB_FILE)
     cursor = conn.cursor()
 
     cursor.execute("SELECT username, hashed_password, salt FROM users")
