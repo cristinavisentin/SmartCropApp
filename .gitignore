@@ -99,3 +99,4 @@ temp_files/
 *.ipynb_convert/
 
 .devcontainer
+/app/local_test.py
