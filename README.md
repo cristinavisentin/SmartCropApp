@@ -30,6 +30,7 @@ This web application leverages Python and Streamlit to provide farmers and agric
 #### Prerequisites
 - Python 3.8+
 - `pip` (Python package manager)
+- Internet connection (The application uses APIs for geolocation and to obtain weather data, see [technologies used](#technologies-used) for details)
 
 ### Installation
 1. Clone the repository:
@@ -61,4 +62,5 @@ Streamlit: Framework for building the web interface.
 
 Machine Learning: Custom ML engine for predictions.
 
-Geolocation API: For location-based recommendations.
+Geolocation API: For location-based recommendations.  
+(Thanks to https://open-meteo.com/en/docs/historical-weather-api for the data)
