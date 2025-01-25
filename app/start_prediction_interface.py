@@ -1,8 +1,9 @@
 import streamlit as st
-import geocoder
 from geopy.geocoders import Nominatim
 import time
 from climate_data import get_climate_data
+import folium
+from streamlit_folium import st_folium
 
 plant_options = ["Rice", "Cassava", "Maize", "Plantains", "Potatoes", "Sorghum", "Soybeans", "Sweet potatoes", "Potatoes",
            "Wheat", "Yams"]
@@ -57,14 +58,6 @@ def get_country_from_coordinates(latitude, longitude):
         st.warning(f"Unable to determine the country due to an error: {str(e)}")
         return None
 
-def get_geolocation():
-    st.write(f"Getting position...")
-    g = geocoder.ip("me")
-    if g.ok:
-        lat, lon = g.latlng
-        st.success(f"Your position is: Lat {lat}, Lon {lon}")
-        return lat, lon
-    return None
 
 
 def multiple_prediction_page():
@@ -126,8 +119,15 @@ def single_prediction_page():
     st.write("You can select your country in two ways...")
     col1, col2 = st.columns(2)
     with col1:
-        if st.button("get geolocation and go to prediction"):
-            co1, co2 = get_geolocation()
+
+
+        m = folium.Map(location=[41.9028, 12.4964], zoom_start=6)
+        st_data = st_folium(m, height= 400, width=725)
+
+        if st.button("Get location from the map and go to prediction"):
+            co1 = st_data["center"]["lat"]
+            co2 = st_data["center"]["lng"]
+
             time.sleep(2)
             avg_temperature, avg_rainfall = get_climate_data(co1, co2)
             print("avg_temperature: ", avg_temperature, " avg_rainfall: ", avg_rainfall)
@@ -136,9 +136,7 @@ def single_prediction_page():
             st.session_state["country"] = [get_country_from_coordinates(co1, co2)]
             st.session_state["avg_temperature"] = [avg_temperature]
             st.session_state["avg_rainfall"] = [avg_rainfall]
-
             st.session_state["page"] = "prediction_result"
-
             st.rerun()
     with col2:
         chosen_country = st.selectbox("Select your Country:", country_options)
@@ -152,7 +150,6 @@ def single_prediction_page():
             st.session_state["country"] = [chosen_country]
             st.session_state["avg_temperature"] = [avg_temperature]
             st.session_state["avg_rainfall"] = [avg_rainfall]
-
             st.session_state["page"] = "prediction_result"
             time.sleep(3)
             st.rerun()

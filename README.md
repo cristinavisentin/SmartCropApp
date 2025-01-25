@@ -19,10 +19,7 @@ This web application leverages Python and Streamlit to provide farmers and agric
    - Receive personalized **seed suggestions** based on your location and field size.
    - Emphasis on **pesticide-free farming** as part of our vision for sustainable agriculture.
 
-5. **Geolocation Integration**:
-   - Automatically use your geographical location to tailor predictions and suggestions.
-
-6. **Field Size Input and storage**:
+5. **Field Size Input and storage**:
    - Provide and save the size of your field to improve prediction accuracy and recommendations.
 
 ## Installation and Setup
@@ -30,7 +27,7 @@ This web application leverages Python and Streamlit to provide farmers and agric
 #### Prerequisites
 - Python 3.8+
 - `pip` (Python package manager)
-- Internet connection (The application uses APIs for geolocation and to obtain weather data, see [technologies used](#technologies-used) for details)
+- Internet connection (The application uses APIs to obtain weather data, see [technologies used](#technologies-used) for details)
 
 ### Installation
 1. Clone the repository:
@@ -62,5 +59,4 @@ Streamlit: Framework for building the web interface.
 
 Machine Learning: Custom ML engine for predictions.
 
-Geolocation API: For location-based recommendations.  
 (Thanks to https://open-meteo.com/en/docs/historical-weather-api for the data)
