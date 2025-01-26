@@ -14,13 +14,16 @@ def logout():
         controller.remove("SmartCrop_auth_token")
         time.sleep(1)
         controller.refresh()
-        st.session_state["authenticated"] = False
-        st.session_state["username"] = None
-        st.session_state["valid_token_decoded"] = False
-        st.session_state["page"] = "sign_in"
-        print("You are correctly logged out")
-    except Exception:
-        print("Error in logout")
+        st.session_state.update({
+            "authenticated": False,
+            "username": None,
+            "valid_token_decoded": False,
+            "page": "sign_in"
+        })
+    except KeyError as e:
+        print("Failed to remove authentication token: %s", e)
+    except Exception as e:
+        print("An unexpected error occurred during logout: %s", e)
 
 
 def generate_token(username):
@@ -37,28 +40,36 @@ def validate_token():
         controller.refresh()
         time.sleep(1)
         token = controller.get("SmartCrop_auth_token")
-        print("token found", token)
+        print("Token found: %s", token)
+
         if token is None:
             return False
-    except Exception:
-        print("token not found")
+    except KeyError as e:
+        print("Error accessing authentication token: %s", e)
+        return False
+    except Exception as e:
+        print("Unexpected error during token retrieval: %s", e)
         return False
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
         username = payload.get("username")
         st.session_state["username"] = username
         if not username:
-            print("Token payload missing 'username'")
+            print("Token payload is missing the 'username' field.")
             return False
         if check_username_in_db(username):
             return True
-        print("Session ID or User ID not found in database")
-        return False
+        else:
+            print("User '%s' not found in the database.", username)
+            return False
     except jwt.ExpiredSignatureError:
-        print("The token is expired")
+        print("The token has expired.")
         return False
     except jwt.InvalidTokenError:
-        print("Token not valid during token validation")
+        print("The token is invalid.")
+        return False
+    except Exception as e:
+        print("Unexpected error during token validation: %s", e)
         return False
 
 
@@ -90,10 +101,14 @@ def get_username(token):
 
 def save_persistent_session_auth_token(username):
     try:
-        controller.set("SmartCrop_auth_token", generate_token(username), max_age=7*86400, secure=True)
-        print("cookie with token saved")
-    except Exception:
-        print("It's non been possibile to set the token")
+        token = generate_token(username)
+        controller.set("SmartCrop_auth_token", token, max_age=7 * 86400, secure=True)
+        print("Authentication token successfully saved for user '%s'.", username)
+    except ValueError as e:
+        print("Invalid token for username '%s': %s", username, e)
+    except Exception as e:
+        print("An unexpected error occurred while saving the authentication token: %s", e)
+
 
 
 def sign_in_page():
