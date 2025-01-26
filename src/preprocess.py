@@ -2,19 +2,19 @@ import numpy as np
 import pandas as pd
 
 
-def find_outliers(X):
-    Q1 = np.quantile(X, 0.25, axis=0)
-    Q3 = np.quantile(X, 0.75, axis=0)
-    IQR = Q3-Q1
-    lower = Q1 - 1.5 * IQR
-    upper = Q3 + 1.5*IQR
-    return (X >= lower) & (X <= upper)
+def find_outliers(x):
+    q1 = np.quantile(x, 0.25, axis=0)
+    q3 = np.quantile(x, 0.75, axis=0)
+    iqr = q3-q1
+    lower = q1 - 1.5 * iqr
+    upper = q3 + 1.5*iqr
+    return (x >= lower) & (x <= upper)
 
 
 # Read dataset from file
 df = pd.read_csv('data/raw/yield_df.csv', index_col=0)
 
-# Remove unneded variables
+# Remove unneeded variables
 df.drop(['pesticides_tonnes'], axis=1, inplace=True)
 
 # Remove duplicated rows

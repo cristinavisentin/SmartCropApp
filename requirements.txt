@@ -8,3 +8,6 @@ requests-cache==1.2.1
 retry-requests==2.0.0
 scikit-learn==1.5.2
 streamlit_folium==0.24.0
+matplotlib==3.10.0
+seaborn==0.13.2
+kagglehub==0.3.6

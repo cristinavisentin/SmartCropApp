@@ -2,7 +2,7 @@ from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from sklearn.model_selection import GridSearchCV
 from sklearn.ensemble import RandomForestRegressor
 from random import shuffle
-import pickle
+from pickle import dump
 import numpy as np
 import pandas as pd
 
@@ -23,7 +23,7 @@ encoder = OneHotEncoder(sparse_output=False).fit(
 
 # Write the encoder to disk
 with open('artifacts/encoder.pkl', 'wb') as encoder_file:
-    pickle.dump(encoder, encoder_file)
+    dump(encoder, encoder_file)
 
 # Encode categorical
 encoded_values = pd.DataFrame(encoder.transform(
@@ -39,10 +39,10 @@ scaler.fit(X)
 
 # Write the scaler to disk
 with open('artifacts/scaler.pkl', 'wb') as scaler_file:
-    pickle.dump(scaler, scaler_file)
+    dump(scaler, scaler_file)
 
 
-# Separate independent and depenedent variable
+# Separate independent and dependent variable
 X = scaler.transform(X)
 y = df[:, 3]
 
@@ -66,4 +66,4 @@ grid.fit(X, y)
 
 # Write the best estimator to disk
 with open('artifacts/model.pkl', 'wb') as model_file:
-    pickle.dump(grid.best_estimator_, model_file)
+    dump(grid.best_estimator_, model_file)
