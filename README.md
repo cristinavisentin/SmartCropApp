@@ -1,5 +1,8 @@
 ![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
-![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)
+![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)  
+
+[![Python application](https://github.com/cristinavisentin/SmartCropApp/actions/workflows/python-app.yml/badge.svg)](https://github.com/cristinavisentin/SmartCropApp/actions/workflows/python-app.yml)
+[![Qodana](https://github.com/cristinavisentin/SmartCropApp/actions/workflows/qodana_code_quality.yml/badge.svg)](https://github.com/cristinavisentin/SmartCropApp/actions/workflows/qodana_code_quality.yml)
 
 # 🌾 SmartCrop: agricultural yield predictor
 This web application leverages Python and Streamlit to provide farmers and agricultural enthusiasts with insights into crop yield predictions. Built on a machine learning engine, the app combines data-driven predictions with user-friendly features to encourage sustainable farming practices.
