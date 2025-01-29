@@ -19,8 +19,6 @@ if "authenticated" not in st.session_state: # first open
     st.session_state["page"] = "homepage"
     print("first open or refresh")
 
-    st.session_state["page"] = "sign_in"
-
 if st.session_state["authenticated"]==False and validate_token(): # is not authenticated (a refresh for example) BUT the token in cookie is valid
     st.session_state["authenticated"] = True
     st.session_state["page"] = "homepage"
