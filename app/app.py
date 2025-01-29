@@ -26,16 +26,16 @@ if st.session_state["authenticated"]==False and validate_token(): # is not authe
 def render_sidebar():
     if st.session_state["authenticated"]:
         st.sidebar.title(f"Welcome back {st.session_state['username']}!")
-        if st.sidebar.button("Process data"):
-            st.session_state["page"] = "crop_application_single_prediction"
-        if st.sidebar.button("My data"):
-            st.session_state["page"] = "data"
-        if st.sidebar.button("What is this app?"):
+        if st.sidebar.button("Homepage"):
             st.session_state["page"] = "homepage"
-        if st.sidebar.button("Privacy policy"):
-            st.session_state["page"] = "privacy_policy"
+        if st.sidebar.button("Predict yield"):
+            st.session_state["page"] = "crop_application_single_prediction"
+        if st.sidebar.button("My predictions"):
+            st.session_state["page"] = "data"
         if st.sidebar.button("Our vision"):
             st.session_state["page"] = "vision"
+        if st.sidebar.button("Privacy policy"):
+            st.session_state["page"] = "privacy_policy"
         if st.sidebar.button("Log Out"):
             print("logout clicked")
             logout()
@@ -43,16 +43,16 @@ def render_sidebar():
             st.rerun()
     else:
         st.sidebar.title("Menu")
-        if st.sidebar.button("Log In"):
-            st.session_state["page"] = "sign_in"
-        if st.sidebar.button("Don't have an account?"):
-            st.session_state["page"] = "sign_up"
-        if st.sidebar.button("What is this app?"):
+        if st.sidebar.button("Homepage"):
             st.session_state["page"] = "homepage"
-        if st.sidebar.button("Privacy policy"):
-            st.session_state["page"] = "privacy_policy"
+        if st.sidebar.button("Sign In"):
+            st.session_state["page"] = "sign_in"
+        if st.sidebar.button("Sign Up"):
+            st.session_state["page"] = "sign_up"
         if st.sidebar.button("Our vision"):
             st.session_state["page"] = "vision"
+        if st.sidebar.button("Privacy policy"):
+            st.session_state["page"] = "privacy_policy"
 
 render_sidebar()
 

@@ -101,7 +101,7 @@ def sign_in_page():
     username = st.text_input("Username")
     password = st.text_input("Password", type="password")
     remember = st.checkbox("Do you want to stay logged in?")
-    if st.button("Sign In"):
+    if st.button("Sign In", key=100):
         result, error_message = db_utils.check_user_credentials(username, password)
         if error_message:
             st.error("There is a problem with the database. We apologize for the inconvenience, please try again later")
@@ -126,7 +126,7 @@ def sign_up_page():
     st.title("Sign Up")
     username = st.text_input("Choose a Username")
     password = st.text_input("Choose a Password", type="password")
-    if st.button("Sign Up"):
+    if st.button("Sign Up", key=101):
         result, error_message = db_utils.create_user(username, password)
         if error_message:
             st.error("There is a problem with the database. We apologize for the inconvenience, please try again later")
