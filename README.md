@@ -25,6 +25,9 @@ This web application leverages Python and Streamlit to provide farmers and agric
 5. **Field Size Input and storage**:
    - Provide and save the size of your field to improve prediction accuracy and recommendations.
 
+## Usage
+The application is online on [Streamlit Cloud](https://smartcrop.streamlit.app) or you can run it on your machine, see [installation](#installation-and-setup) for details.
+
 ## Installation and Setup
 
 #### Prerequisites
@@ -35,14 +38,17 @@ This web application leverages Python and Streamlit to provide farmers and agric
 ### Installation
 1. Clone the repository:
     ```bash
-    git clone https://github.com/cristinavisentin/CropML-data-driven-app.git
+    git clone https://github.com/cristinavisentin/SmartCropApp.git
 2. Navigate to the project directory:
     ```bash
-    cd CropML-data-driven-app
+    cd SmartCropApp
 3. Install dependencies:
     ```bash
     pip install -r requirements.txt
-4. Run the application:
+4. Set up the database:
+    ```bash
+    python app/create_db.py
+5. Run the application:
     ```bash
     streamlit run app/app.py
 
