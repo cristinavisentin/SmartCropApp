@@ -100,3 +100,6 @@ temp_files/
 
 .devcontainer
 /app/local_test.py
+
+# SQLite
+.cache.sqlite
