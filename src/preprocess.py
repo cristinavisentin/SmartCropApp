@@ -12,10 +12,7 @@ def find_outliers(X):
 
 
 # Read dataset from file
-df = pd.read_csv('data/raw/yield_df.csv', index_col=0)
-
-# Remove unneded variables
-df.drop(['pesticides_tonnes'], axis=1, inplace=True)
+df = pd.read_csv('data/processed/yield.csv')
 
 # Remove duplicated rows
 df.drop_duplicates(inplace=True)
