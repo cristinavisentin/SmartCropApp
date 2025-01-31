@@ -65,17 +65,17 @@ def multiple_prediction_page():
     col1, col2, col3 = st.columns(3)
 
     with col1:
-        acres1 = st.number_input("Number of acres", min_value=1, max_value=1000, value=1, key = "acres1")
+        acres1 = st.number_input("Number of hectares", min_value=1, max_value=1000, value=1, key = "acres1")
         chosen_plant1 = st.selectbox("Select the plant:", plant_options, key="plant1")
         chosen_country1 = st.selectbox("Select the Country:", country_options, key="country1")
 
     with col2:
-        acres2 = st.number_input("Number of acres", min_value=1, max_value=1000, value=1, key = "acres2")
+        acres2 = st.number_input("Number of hectares", min_value=1, max_value=1000, value=1, key = "acres2")
         chosen_plant2 = st.selectbox("Select the plant:", plant_options, key="plant2")
         chosen_country2 = st.selectbox("Select the Country:", country_options, key="country2")
 
     with col3:
-        acres3 = st.number_input("Number of acres", min_value=1, max_value=1000, value=1, key = "acres3")
+        acres3 = st.number_input("Number of hectares", min_value=1, max_value=1000, value=1, key = "acres3")
         chosen_plant3 = st.selectbox("Select the plant:", plant_options, key="plant3")
         chosen_country3 = st.selectbox("Select the Country:", country_options, key="country3")
 
@@ -113,7 +113,7 @@ def single_prediction_page():
     st.header("Choose an option")
 
     chosen_plant = st.selectbox("Select which plant you want to grow:", plant_options)
-    acres_quantity = st.number_input("In how many acres of land do you want to grow this plant?", min_value=1, max_value=1000, value=1, key = "acres")
+    acres_quantity = st.number_input("In how many hectares of land do you want to grow this plant?", min_value=1, max_value=1000, value=1, key = "acres")
     st.session_state["acres_to_cultivate"] = [acres_quantity]
 
     st.write("You can select your country in two ways...")
