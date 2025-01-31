@@ -23,6 +23,7 @@ encoder = OneHotEncoder(sparse_output=False).fit(
 
 # Write the encoder to disk
 with open('artifacts/encoder.pkl', 'wb') as encoder_file:
+    # noinspection PyTypeChecker
     dump(encoder, encoder_file)
 
 # Encode categorical
@@ -39,6 +40,7 @@ scaler.fit(X)
 
 # Write the scaler to disk
 with open('artifacts/scaler.pkl', 'wb') as scaler_file:
+    # noinspection PyTypeChecker
     dump(scaler, scaler_file)
 
 
@@ -48,6 +50,7 @@ y = df[:, 3]
 
 # Shuffle data
 to_shuffle = np.arange(X.shape[0])
+# noinspection PyTypeChecker
 shuffle(to_shuffle)
 X = X[to_shuffle]
 y = y[to_shuffle]
@@ -66,4 +69,5 @@ grid.fit(X, y)
 
 # Write the best estimator to disk
 with open('artifacts/model.pkl', 'wb') as model_file:
+    # noinspection PyTypeChecker
     dump(grid.best_estimator_, model_file)
