@@ -7,7 +7,7 @@ from streamlit_cookies_controller import CookieController
 from db_utils import check_username_in_db
 
 controller = CookieController()
-SECRET_KEY = "123"
+SECRET_KEY = "c43e5b6fedf08ceb5919c320adce492bc4715c2d7c1ea3d7c16a62df0540686f"
 
 def logout():
     try:
