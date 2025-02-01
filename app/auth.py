@@ -144,7 +144,10 @@ def sign_up_page():
     if st.button("Sign Up", key=101):
         result, error_message = db_utils.create_user(username, password)
         if error_message:
-            st.error("There is a problem with the database. We apologize for the inconvenience, please try again later")
+            if error_message == "User already exists":
+                st.error("User already exists")
+            else:
+                st.error("There is a problem with the database. We apologize for the inconvenience, please try again later")
         else:
             if result:
                 st.success("Successful registration! Back to login page")

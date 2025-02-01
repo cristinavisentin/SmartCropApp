@@ -19,7 +19,7 @@ def create_user(username, password):
         return True, None
     except sqlite3.IntegrityError:
         print("User already exists")
-        return False
+        return False, "User already exists"
     except sqlite3.OperationalError as e:
         print(f"Database error: {e}")
         return False, str(e)
