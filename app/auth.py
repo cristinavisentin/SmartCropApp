@@ -21,9 +21,9 @@ def logout():
             "page": "sign_in"
         })
     except KeyError as e:
-        print("Failed to remove authentication token: %s", e)
+        print("Failed to remove authentication token: ", e)
     except Exception as e:
-        print("An unexpected error occurred during logout: %s", e)
+        print("An unexpected error occurred during logout: ", e)
 
 
 def generate_token(username):
@@ -32,7 +32,7 @@ def generate_token(username):
         "username": username,
         "exp": expiration_time
     }
-    token = jwt.encode(payload, SECRET_KEY, algorithm="HS256")
+    token = jwt.encode(payload, SECRET_KEY, algorithm="HS256`")
     return token
 
 def validate_token():
@@ -40,15 +40,15 @@ def validate_token():
         controller.refresh()
         time.sleep(1)
         token = controller.get("SmartCrop_auth_token")
-        print("Token found: %s", token)
+        print("Token found: ", token)
 
         if token is None:
             return False
     except KeyError as e:
-        print("Error accessing authentication token: %s", e)
+        print("Error accessing authentication token: ", e)
         return False
     except Exception as e:
-        print("Unexpected error during token retrieval: %s", e)
+        print("Unexpected error during token retrieval: ", e)
         return False
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
@@ -60,7 +60,7 @@ def validate_token():
         if check_username_in_db(username):
             return True
         else:
-            print("User '%s' not found in the database.", username)
+            print(f"User '{username}' not found in the database.")
             return False
     except jwt.ExpiredSignatureError:
         print("The token has expired.")
@@ -69,7 +69,7 @@ def validate_token():
         print("The token is invalid.")
         return False
     except Exception as e:
-        print("Unexpected error during token validation: %s", e)
+        print("Unexpected error during token validation: ", e)
         return False
 
 
@@ -92,7 +92,7 @@ def get_username(token):
         print("Error: Invalid token")
         return ""
     except Exception as e:
-        print("Unexpected error:", e)
+        print("Unexpected error: ", e)
         return ""
 
 
@@ -103,11 +103,11 @@ def save_persistent_session_auth_token(username):
     try:
         token = generate_token(username)
         controller.set("SmartCrop_auth_token", token, max_age=7 * 86400, secure=True)
-        print("Authentication token successfully saved for user '%s'.", username)
+        print(f"Authentication token successfully saved for user '{username}'.")
     except ValueError as e:
-        print("Invalid token for username '%s': %s", username, e)
+        print(f"Invalid token for username '{username}': {e}")
     except Exception as e:
-        print("An unexpected error occurred while saving the authentication token: %s", e)
+        print("An unexpected error occurred while saving the authentication token: ", e)
 
 
 

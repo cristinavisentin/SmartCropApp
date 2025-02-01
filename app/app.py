@@ -17,7 +17,6 @@ if "authenticated" not in st.session_state: # first open
     st.session_state["authenticated"] = False
     st.session_state["username"] = None
     st.session_state["page"] = "homepage"
-    print("first open or refresh")
 
 if st.session_state["authenticated"]==False and validate_token(): # is not authenticated (a refresh for example) BUT the token in cookie is valid
     st.session_state["authenticated"] = True
@@ -37,9 +36,7 @@ def render_sidebar():
         if st.sidebar.button("Privacy policy"):
             st.session_state["page"] = "privacy_policy"
         if st.sidebar.button("Log Out"):
-            print("logout clicked")
             logout()
-            print("logout func finisched")
             st.rerun()
     else:
         st.sidebar.title("Menu")
