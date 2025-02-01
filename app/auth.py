@@ -32,7 +32,7 @@ def generate_token(username):
         "username": username,
         "exp": expiration_time
     }
-    token = jwt.encode(payload, SECRET_KEY, algorithm="HS256`")
+    token = jwt.encode(payload, SECRET_KEY, algorithm="HS256")
     return token
 
 def validate_token():
@@ -40,7 +40,6 @@ def validate_token():
         controller.refresh()
         time.sleep(1)
         token = controller.get("SmartCrop_auth_token")
-        print("Token found: ", token)
 
         if token is None:
             return False
